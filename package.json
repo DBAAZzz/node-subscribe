@@ -1,0 +1,17 @@
+{
+  "name": "node-subscribe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DBAA",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.3",
+    "koa-router": "^10.1.1",
+    "sha1": "^1.1.1",
+    "superagent": "^6.1.0"
+  }
+}
