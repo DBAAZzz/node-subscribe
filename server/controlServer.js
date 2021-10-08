@@ -1,19 +1,19 @@
 const { get, post } = require('../utils/request')
+const { getString, setString } = require('../middleware/redis')
 const { appID, appsecret } = require('../config')
 
-let token = '49_CfaPF4mb4E06vhYELEDoadRxqoWeD1h6NJU4zvSBT00oGGvUUA385LXuOQjLDEwTLCvW9YdqZ2g3YYLwv1M2l-IUAd0y-zxXNrhXDLe2jl4NKVcfSYLZzYwAZ6n1dEPKfKY-zPFXm8IuyINDLCRgADAVMB';
-
 async function getWXToken() {
-    let data = await get(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appID}&secret=${appsecret}`)
-    console.log('data', data)
+    let { access_token, expires_in } = await get(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appID}&secret=${appsecret}`)
+    setString('wxtoken', access_token, expires_in)
 }
 
-async function sendTemepleMessage() {
-    let userInfo = await get(`https://api.weixin.qq.com/cgi-bin/user/info?access_token=${token}&openid=oHAoD6UvjROLxXUve8TbjSdt3oMs&lang=zh_CN`)
+async function sendTemepleMessage(openid, templateId) {
+    let token = await getString('wxtoken')
+    let userInfo = await get(`https://api.weixin.qq.com/cgi-bin/user/info?access_token=${token}&openid=${openid}&lang=zh_CN`)
     console.log('userInfo', userInfo)
-    let data = await post(`https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${token}`, {
-        touser: "oHAoD6UvjROLxXUve8TbjSdt3oMs",
-        template_id: "R8O-Y9pmmRQ4eJWKfd25T2dzfJlh5x8hrdD40sYx5E0",
+    await post(`https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${token}`, {
+        touser: openid,
+        template_id: templateId,
         data: {
             name: {
                 value: userInfo.nickname,

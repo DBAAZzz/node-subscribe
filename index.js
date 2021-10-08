@@ -1,25 +1,12 @@
-// const Koa = require('koa');
-// const sha1 = require('sha1');
-// const app = new Koa();
-// const { token } = require('./config')
+const Koa = require('koa');
+const app = new Koa();
 
-// app.use(async ctx => {
-//     const signature = ctx.query.signature, timestamp = ctx.query.timestamp, nonce = ctx.query.nonce;
-//     const str = [token, timestamp, nonce].sort().join('');
-//     const result = sha1(str);
-//     if (result === signature) {
-//         ctx.body = ctx.query.echostr;
-//     } else {
-//         ctx.body = {
-//             code: -1,
-//             message: 'fail'
-//         }
-//     }
-// });
+const router = require('./router')
 
-// app.listen(3000);
+require('./middleware/schedule');
 
+app.use(router.routes())
 
-const { sendTemepleMessage } = require('./server/controlServer')
-
-sendTemepleMessage()
+app.listen(3000, () => {
+    console.log('监听3000端口成功')
+});
